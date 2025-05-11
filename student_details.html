@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #003366, #008080);
+            padding: 20px;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .student-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .student-details {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .detail-value {
+            text-align: left;
+        }
+
+        input, textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.3s;
+            color: #fff;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-primary {
+            background-color: #2196F3;
+        }
+
+        .btn-success {
+            background-color: #4CAF50;
+        }
+
+        .btn-danger {
+            background-color: #f44336;
+        }
+
+        .btn-secondary {
+            background-color: #607D8B;
+        }
+
+        .attendance-history {
+            margin-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 20px;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .attendance-table th, .attendance-table td {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px;
+            text-align: center;
+        }
+
+        .attendance-table th {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .present {
+            color: rgb(246, 246, 246);
+        }
+
+        .absent {
+            color: rgb(230, 14, 14);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2196F3;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="student-header">
+            <h1>Student Details</h1>
+        </div>
+        
+        <div class="student-details" id="viewMode">
+            <div class="detail-label">Name:</div>
+            <div class="detail-value" id="studentName"></div>
+            
+            <div class="detail-label">Reg No:</div>
+            <div class="detail-value" id="studentReg"></div>
+            
+            <div class="detail-label">Mobile:</div>
+            <div class="detail-value" id="studentMobile"></div>
+            
+            <div class="detail-label">College:</div>
+            <div class="detail-value" id="studentCollege"></div>
+            
+            <div class="detail-label">Address of College:</div>
+            <div class="detail-value" id="companyAddress"></div>
+
+            <div class="detail-label">Duration (months):</div>
+            <div class="detail-value" id="studentDuration"></div>
+
+            <div class="detail-label">Project Title:</div>
+            <div class="detail-value" id="studentDesignation"></div>
+
+        </div>
+        
+        <div class="student-details hidden" id="editMode">
+            <div class="detail-label">Name:</div>
+            <div class="detail-value">
+                <input type="text" id="editName">
+            </div>
+            
+            <div class="detail-label">Reg No:</div>
+            <div class="detail-value">
+                <input type="text" id="editReg" disabled>
+            </div>
+            
+            <div class="detail-label">Mobile:</div>
+            <div class="detail-value">
+                <input type="text" id="editMobile">
+            </div>
+            
+            <div class="detail-label">College:</div>
+            <div class="detail-value">
+                <input type="text" id="editCollege">
+            </div>
+            
+            <div class="detail-label">Address of Company:</div>
+            <div class="detail-value">
+                <input type="text" id="editAddress">
+            </div>
+            
+            <div class="detail-label">Duration (months):</div>
+            <div class="detail-value">
+                <input type="text" id="editDuration">
+            </div>
+            
+            <div class="detail-label">Designation:</div>
+            <div class="detail-value">
+                <input type="text" id="editDesignation">
+            </div>
+            
+        </div>
+        
+        <div class="button-group" id="viewButtons">
+            <button class="btn btn-primary" onclick="toggleEditMode(true)">Edit Details</button>
+        </div>
+        
+        <div class="button-group hidden" id="editButtons">
+            <button class="btn btn-success" onclick="saveChanges()">Save Changes</button>
+            <button class="btn btn-secondary" onclick="toggleEditMode(false)">Cancel</button>
+        </div>
+        
+        <div class="attendance-history">
+            <div id="attendanceSummary" style="margin-bottom: 15px; font-size: 1.1rem; color: #f0f0f0;"></div>
+            <h2>Attendance History</h2>
+            <div id="attendanceContainer">
+                <p id="noAttendance">No attendance records found.</p>
+                <table class="attendance-table" id="attendanceTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Recorded On</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="button-group">
+          <button class="btn btn-danger" onclick="deleteStudent()">Delete Student</button>
+        </div>
+    </div>
+
+    <script>
+      let student;
+      const regNumber = new URLSearchParams(window.location.search).get("reg");
+    
+      if (!regNumber) {
+       alert("⚠️ Unauthorized access. Redirecting to login.");
+        window.location.href = "login.html";
+      }
+
+    
+      async function loadStudentData() {
+        try {
+          const res = await fetch(`http://localhost:3000/api/students/${regNumber}`);
+          student = await res.json();
+    
+          document.getElementById("studentName").textContent = student.studentName || "N/A";
+          document.getElementById("studentReg").textContent = student.regNumber;
+          document.getElementById("studentMobile").textContent = student.mobileNumber;
+          document.getElementById("studentCollege").textContent = student.collegeName;
+          document.getElementById("companyAddress").textContent = student.collegeAddress || "N/A";
+          document.getElementById("studentDuration").textContent = student.duration || "N/A";
+          document.getElementById("studentDesignation").textContent = student.designation || "N/A";
+    
+          document.getElementById("editName").value = student.studentName || "";
+          document.getElementById("editReg").value = student.regNumber;
+          document.getElementById("editMobile").value = student.mobileNumber || "";
+          document.getElementById("editCollege").value = student.collegeName || "";
+          document.getElementById("editAddress").value = student.collegeAddress || "";
+          document.getElementById("editDuration").value = student.duration || "";
+          document.getElementById("editDesignation").value = student.designation || "";
+        } catch (err) {
+          console.error("Failed to load student:", err);
+          alert("Student not found.");
+          window.location.href = "dashboard.html";
+        }
+      }
+    
+      async function loadAttendanceHistory() {
+        try {
+          const res = await fetch(`http://localhost:3000/api/attendance/${regNumber}`);
+          const records = await res.json();
+    
+          const table = document.getElementById("attendanceTable");
+          const body = document.getElementById("attendanceBody");
+    
+          if (!records.length) {
+            document.getElementById("noAttendance").style.display = "block";
+            table.style.display = "none";
+            return;
+          }
+    
+          body.innerHTML = "";
+          document.getElementById("noAttendance").style.display = "none";
+          table.style.display = "table";
+    
+          records.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+          records.forEach((record) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${new Date(record.date).toLocaleDateString()}</td>
+              <td class="${record.present ? 'present' : 'absent'}">${record.present ? "Present" : "Absent"}</td>
+              <td>${new Date(record.timestamp).toLocaleString()}</td>
+            `;
+            body.appendChild(row);
+          });
+        } catch (err) {
+          console.error("Failed to load attendance:", err);
+        }
+      }
+    
+      async function loadAttendanceSummary() {
+        try {
+          const res = await fetch(`http://localhost:3000/api/attendance-summary/${regNumber}`);
+          const summary = await res.json();
+    
+          const summaryDiv = document.getElementById("attendanceSummary");
+    
+          summaryDiv.innerHTML = `
+            <strong>Attendance Summary:</strong><br>
+            ✅ Present: <strong>${summary.present}</strong> |
+            ❌ Absent: <strong>${summary.absent}</strong> |
+            📅 Total Days: <strong>${summary.total}</strong>
+          `;
+        } catch (err) {
+          console.error("Failed to load summary:", err);
+        }
+      }
+    
+      function toggleEditMode(isEditing) {
+        document.getElementById("viewMode").classList.toggle("hidden", isEditing);
+        document.getElementById("editMode").classList.toggle("hidden", !isEditing);
+        document.getElementById("viewButtons").classList.toggle("hidden", isEditing);
+        document.getElementById("editButtons").classList.toggle("hidden", !isEditing);
+      }
+    
+      async function saveChanges() {
+        const updatedStudent = {
+          ...student,
+          studentName: document.getElementById("editName").value.trim(),
+          mobileNumber: document.getElementById("editMobile").value.trim(),
+          collegeName: document.getElementById("editCollege").value.trim(),
+          collegeAddress: document.getElementById("editAddress").value.trim(),
+          duration: document.getElementById("editDuration").value.trim(),
+          designation: document.getElementById("editDesignation").value.trim()
+
+        };
+    
+        if (!updatedStudent.studentName) {
+          alert("Student name cannot be empty!");
+          return;
+        }
+    
+        try {
+          const res = await fetch(`http://localhost:3000/api/students/${regNumber}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedStudent)
+          });
+    
+          if (res.ok) {
+            alert("Student updated successfully.");
+            student = updatedStudent;
+            loadStudentData();
+            toggleEditMode(false);
+          } else {
+            alert("Failed to update student.");
+          }
+        } catch (err) {
+          console.error("Update error:", err);
+          alert("Something went wrong.");
+        }
+      }
+    
+      async function deleteStudent() {
+        if (!confirm(`Are you sure you want to delete ${student.studentName}?`)) return;
+    
+        try {
+          const res = await fetch(`http://localhost:3000/api/students/${regNumber}`, {
+            method: "DELETE"
+          });
+    
+          if (res.ok) {
+            alert("Student deleted.");
+            window.location.href = "dashboard.html";
+          } else {
+            alert("Failed to delete student.");
+          }
+        } catch (err) {
+          console.error("Delete error:", err);
+          alert("Something went wrong.");
+        }
+      }
+    
+      window.onload = () => {
+        loadStudentData();
+        loadAttendanceHistory();
+        loadAttendanceSummary();
+      };
+    </script>
+    
+      
+      
+</body>
+</html>

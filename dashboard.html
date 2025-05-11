@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),  
+        url('hal engine photo.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.9;
+      z-index: -1;
+    }
+
+    .dashboard-container {
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 40px 20px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 900px;
+      margin: auto;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      position: relative;
+      text-align: center;
+      color: white;
+      top: 50%;
+      transform: translateY(-50%);
+      .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  margin-top: -45px;
+}
+
+.title-section {
+  flex-grow: 1;
+  text-align: center;
+  margin-right: 80px;
+}
+
+.title-section h1 {
+  margin: 0;
+  font-size: 32px;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.title-section h2 {
+  margin: 4px 0 0 0;
+  font-size: 20px;
+  font-weight: normal;
+  color: #ccc;
+}
+
+    }
+
+    .logo {
+      width: 70px;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .logout-btn:hover {
+      background-color: darkred;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 32px;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    label {
+      font-size: 18px;
+      margin-right: 10px;
+    }
+
+    input[type="date"] {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .message {
+      margin: 30px 0;
+      font-size: 18px;
+      color: #ddd;
+    }
+
+    .submit-btn {
+      background-color: #339af0;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-top: 20px;
+    }
+
+    .submit-btn:hover {
+      background-color: #1c7ed6;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      color: white;
+    }
+
+    th {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    td label {
+      font-size: 16px;
+      margin: 0 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    <div class="header">
+      <img src="main logo.png" alt="Logo" class="logo" />
+      <div class="title-section">
+        <h1>Engine Division</h1>
+        <h2>IT Deptartment</h2>
+      </div>
+    </div>
+    
+    <div>
+      <label for="attendance-date">Select Date:</label>
+      <input type="date" id="attendance-date" />
+    </div>
+
+    <div class="message" id="student-section">Loading student details....</div>
+  </div>
+
+  <script>
+    function logout() {
+      window.location.href = "login.html";
+    }
+  
+    async function fetchStudents() {
+      try {
+        const response = await fetch("http://localhost:3000/api/students");
+        const students = await response.json();
+        const container = document.getElementById("student-section");
+  
+        if (!students.length) {
+          container.innerHTML = "No students available.";
+          return;
+        }
+  
+        container.innerHTML = `
+          <form id="attendanceForm">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Reg No</th>
+                  <th>Attendance</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentList"></tbody>
+            </table>
+            <button type="submit" class="submit-btn">Submit Attendance</button>
+            <button type="button" class="submit-btn" onclick="downloadExcel()">📥 Download Excel</button>
+          </form>
+        `;
+  
+        const tbody = document.getElementById("studentList");
+  
+        students.forEach((student) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${student.studentName}</td>
+            <td>${student.regNumber}</td>
+            <td>
+              <label><input type="radio" name="attendance_${student.regNumber}" value="present" checked> Present</label>
+              <label><input type="radio" name="attendance_${student.regNumber}" value="absent"> Absent</label>
+            </td>
+            <td>
+              <a href="student_details.html?reg=${student.regNumber}" style="color: #90caf9;">View</a>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+  
+        document.getElementById("attendanceForm").addEventListener("submit", submitAttendance);
+      } catch (err) {
+        console.error("Failed to fetch students:", err);
+        document.getElementById("student-section").innerText = "Failed to load data.";
+      }
+    }
+  
+    async function submitAttendance(e) {
+      e.preventDefault();
+      const date = document.getElementById("attendance-date").value;
+  
+      if (!date) {
+        alert("Please select a date.");
+        return;
+      }
+  
+      const rows = document.querySelectorAll("#studentList tr");
+      const records = [];
+  
+      rows.forEach(row => {
+        const regNumber = row.children[1].textContent;
+        const status = document.querySelector(`input[name="attendance_${regNumber}"]:checked`).value;
+        records.push({
+          regNumber,
+          date,
+          present: status === "present",
+          timestamp: new Date().toISOString()
+        });
+      });
+  
+      try {
+        const res = await fetch("http://localhost:3000/api/attendance", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ records })
+        });
+  
+        const result = await res.json();
+        if (res.ok) {
+          alert("Attendance recorded successfully.");
+        } else {
+          alert("Error: " + result.message);
+        }
+      } catch (err) {
+        console.error("Error submitting attendance:", err);
+        alert("Something went wrong while submitting.");
+      }
+    }
+  
+    window.onload = fetchStudents;
+
+      async function downloadExcel() {
+      try {
+        const response = await fetch("http://localhost:3000/api/export-excel");
+        if (!response.ok) {
+          throw new Error("Failed to download Excel file.");
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "contractor_attendance.xlsx";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } catch (err) {
+        alert("Error downloading file.");
+        console.error("Excel download error:", err);
+      }
+    }
+
+  </script>
+  
+</body>
+</html>

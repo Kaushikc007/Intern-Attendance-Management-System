@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Attendance Register</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('hal engine photo.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      color: #fff;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    .header {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 20px 40px;
+   position: relative;
+  }
+
+  .logo-title-container {
+   display: flex;
+    justify-content: space-between;
+   align-items: center;
+    width: 100%;
+  }
+
+  .logo img {
+    width: 180px; /* Bigger logo */
+    height: auto;
+  }
+
+  .titles {
+   flex-grow: 1;
+    text-align: center;
+    margin-left: -120px; /* Visually center the text */
+  }
+
+  .titles h1 {
+   font-size: 3rem;
+   margin: 0;
+  }
+
+  .titles h2 {
+   font-size: 1.5rem;
+    margin: 5px 0 0 0;
+    font-weight: normal;
+  }
+
+
+    .container {
+      width: 95%;
+      max-width: 1000px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      margin: auto;
+      animation: fadeIn 1s ease-out;
+      font-size: 1.1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .form-column {
+      flex: 1;
+      margin-right: 15px;
+      margin-bottom: 20px;
+      min-width: 250px;
+    }
+
+    .form-column:last-child {
+      margin-right: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="date"] {
+      width: calc(100% - 22px);
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    input[type="text"]:focus,
+    input[type="date"]:focus {
+      border-color: #00bfbf;
+      outline: none;
+    }
+
+    .submit-button {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .submit-button button {
+      background-color: #00bfbf;
+      color: #fff;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .submit-button button:hover {
+      background-color: #009e9e;
+      transform: translateY(-3px);
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .popup p {
+      color: #333;
+      font-size: 1.1rem;
+    }
+
+    #welcomePopup {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo-title-container">
+      <div class="logo">
+        <img src="main logo.png" alt="HAL Logo" />
+      </div>
+      <div class="titles">
+        <h1>Engine Division</h1>
+        <h2>IT Department</h2>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="container">
+    <form id="attendanceForm">
+      <div class="form-row">
+        <div class="form-column">
+          <label for="studentName">Name</label>
+          <input type="text" id="studentName" name="studentName" required />
+        </div>
+        <div class="form-column">
+          <label for="regNumber">Pass Number</label>
+          <input type="text" id="regNumber" name="regNumber" required />
+        </div>
+        <div class="form-column">
+          <label for="mobileNumber">Mobile Number</label>
+          <input type="text" id="mobileNumber" name="mobileNumber" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-column">
+          <label for="collegeName">Name of College</label>
+          <input type="text" id="collegeName" name="collegeName" required />
+        </div>
+        <div class="form-column">
+          <label for="collegeAddress">Address of College</label>
+          <input type="text" id="collegeAddress" name="collegeAddress" required />
+        </div>
+        <div class="form-column">
+          <label for="duration">Duration (In months)</label>
+          <input type="text" id="duration" name="duration" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-column">
+          <label for="designation">Project Title</label>
+          <input type="text" id="designation" name="designation" required />
+        </div>
+        <div class="form-column">
+          <label for="issueDate">Issue Date of Security Pass</label>
+          <input type="date" id="issueDate" name="issueDate" required />
+        </div>
+        <div class="form-column">
+          <label for="endDate">End Date of Security Pass</label>
+          <input type="date" id="endDate" name="endDate" required />
+        </div>
+        <div class="form-row">
+          <div class="form-column" style="flex: 1 1 100%;">
+            <label for="technologiesUsed">Technologies Used</label>
+            <input type="text" id="technologiesUsed" name="technologiesUsed" placeholder="e.g. HTML, CSS, JavaScript" required />
+          </div>
+        </div>
+        
+      </div>
+      
+
+      <div class="submit-button">
+        <button type="submit" id="submitBtn">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="popup" class="popup">
+    <p>Your submission has been recorded!</p>
+  </div>
+
+  <div id="welcomePopup" class="popup">
+    <p>Welcome to HAL student Attendance Portal!</p>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("attendanceForm");
+  
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+  
+        const student = {
+           studentName: document.getElementById("studentName").value,
+          regNumber: document.getElementById("regNumber").value,
+          mobileNumber: document.getElementById("mobileNumber").value,
+          collegeName: document.getElementById("collegeName").value,
+          collegeAddress: document.getElementById("collegeAddress").value,
+          duration: document.getElementById("duration").value,
+          designation: document.getElementById("designation").value,
+          issueDate: document.getElementById("issueDate").value,
+           endDate: document.getElementById("endDate").value,
+           technologiesUsed: document.getElementById("technologiesUsed").value
+      };
+
+  
+        try {
+          const response = await fetch("http://localhost:3000/api/students", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(student)
+          });
+  
+          const data = await response.json();
+  
+          if (response.ok) {
+            showPopup();
+            form.reset();
+          } else {
+            alert("Error: " + data.message);
+          }
+        } catch (error) {
+          console.error("Error submitting form:", error);
+          alert("Failed to submit form. Make sure the backend is running.");
+        }
+      });
+  
+      // Welcome popup fades after 3 seconds
+      setTimeout(() => {
+        document.getElementById("welcomePopup").style.display = "none";
+      }, 3000);
+    });
+  
+    function showPopup() {
+      const popup = document.getElementById("popup");
+      popup.style.display = "block";
+      setTimeout(() => {
+        popup.style.display = "none";
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
